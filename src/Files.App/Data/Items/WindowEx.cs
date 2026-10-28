@@ -1,4 +1,4 @@
-// Copyright (c) Files Community
+﻿// Copyright (c) Files Community
 // SPDX-License-Identifier: MPL-2.0
 
 using Microsoft.UI.Windowing;
@@ -25,6 +25,7 @@ namespace Files.App.Data.Items
 		// Window creation, destruction, and enumeration run on the UI thread.
 		private static readonly HashSet<WindowEx> windows = [];
 
+		private bool _disposed;
 		private bool _isInitialized;
 		private bool _isClosing;
 		private bool _isRestoringPlacement;
@@ -306,7 +307,8 @@ namespace Files.App.Data.Items
 		private LRESULT NewWindowProc(HWND param0, uint param1, WPARAM param2, LPARAM param3)
 		{
 			LRESULT overrideResult = default;
-			if (OnWindowMessageReceived(param1, param2, param3, ref overrideResult))
+			if (TryHandleModernSystemMenuMessage(param1, param2, param3) ||
+				OnWindowMessageReceived(param1, param2, param3, ref overrideResult))
 				return overrideResult;
 
 			switch (param1)
@@ -369,6 +371,10 @@ namespace Files.App.Data.Items
 			catch (Exception)
 			{
 			}
+			finally
+			{
+				ReleaseModernSystemMenu();
+			}
 		}
 
 		private void WindowEx_Activated(object sender, WindowActivatedEventArgs args)
@@ -382,6 +388,12 @@ namespace Files.App.Data.Items
 
 		public void Dispose()
 		{
+			if (_disposed)
+				return;
+
+			_disposed = true;
+
+			ReleaseModernSystemMenu();
 			Closed -= WindowEx_Closed;
 			Activated -= WindowEx_Activated;
 		}

@@ -1,4 +1,4 @@
-// Copyright (c) Files Community
+﻿// Copyright (c) Files Community
 // Licensed under the MIT License.
 
 WNDPROC
@@ -413,3 +413,15 @@ SBSP_ABSOLUTE
 K32EmptyWorkingSet
 GetDoubleClickTime
 SHChangeNotify
+GetSystemMenu
+ScreenToClient
+SC_RESTORE
+SC_MOVE
+SC_SIZE
+SC_MINIMIZE
+SC_MAXIMIZE
+SC_CLOSE
+SC_KEYMENU
+HTCAPTION
+HTSYSMENU
+VK_SPACE
